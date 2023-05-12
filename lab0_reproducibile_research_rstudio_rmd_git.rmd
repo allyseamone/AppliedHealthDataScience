@@ -1,3 +1,10 @@
+---
+output: 
+  html_document: 
+    fig_width: 9
+    fig_height: 7
+    theme: journal
+---
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
@@ -152,8 +159,37 @@ dino_data %>%
 ```
 
 **3. Plot `y` vs. `x` for the `star` dataset. You can (and should) reuse code we introduced above, just replace the dataset name with the desired dataset. Then, calculate the correlation coefficient between `x` and `y` for this dataset. How does this value compare to the `r` of `dino`?**
+```{r}
+dino_data <- datasaurus_dozen %>%
+  filter(dataset == "star")
+```
+
+```{r fig.fullwidth=TRUE}
+ggplot(data = dino_data, mapping = aes(x = x, y = y)) +
+  geom_point()
+```
+
+```{r, eval=FALSE}
+dino_data %>%
+  summarize(r = cor(x, y))
+```
 
 **4. Plot `y` vs. `x` for the `circle` dataset. You can (and should) reuse code we introduced above, just replace the dataset name with the desired dataset. Then, calculate the correlation coefficient between `x` and `y` for this dataset. How does this value compare to the `r` of `dino`?**
+
+```{r}
+dino_data <- datasaurus_dozen %>%
+  filter(dataset == "circle")
+```
+
+```{r fig.fullwidth=TRUE}
+ggplot(data = dino_data, mapping = aes(x = x, y = y)) +
+  geom_point()
+```
+
+```{r, eval=FALSE}
+dino_data %>%
+  summarize(r = cor(x, y))
+```
 
 Facet by the dataset variable, placing the plots in a 3 column grid, and don't add a legend.
 
