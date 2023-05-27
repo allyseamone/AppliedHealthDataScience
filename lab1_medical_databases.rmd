@@ -1,4 +1,8 @@
 ```{r setup, include=FALSE}
+```
+
+
+```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 
 
@@ -74,7 +78,11 @@ We can see there are 2 patient's older than 100 which seems suspicious but we ca
 
 **5** Are there any individuals with impossible ages? If so we can drop this row using `filter` i.e., `data <- data %>% filter(CRITERIA)`
 
-While there are two people that are 115 years old, we cannot actually tell if this is an impossible age. One of the individuals does have hypertension, which can be mananged using medication, but it may not be biologically plausible for an individual to live to 115 years while having hypertension. It also says that the individual did recieve a text message reminder, in this day and age alot of individuals do have cell phones, an individual that is 115 yearss old may not have a cell phone. This age may be an imputation error or it could be correct, but these should be considered with caution as they are borderline biologically implausible. 
+```{r}
+raw.data <- data %>% filter()
+```
+
+While there are two people that are 115 years old, we cannot actually tell if this is an impossible age. One of the individuals does have hypertension, which can be mananged using medication, but it may not be biologically plausible for an individual to live to 115 years while having hypertension. It also says that the individual did recieve a text message reminder, in this day and age alot of individuals do have cell phones, an individual that is 115 years old may not have a cell phone. This age may be an imputation error or it could be correct, but these should be considered with caution as they are borderline biologically implausible. These individuals will be kept in the data set but when interpreting results, there should be considerations for these individuals.
 
 ## Exploratory Data Analysis
 First, we should get an idea if the data meets our expectations, there are newborns in the data (`Age==0`) and we wouldn't expect any of these to be diagnosed with Diabetes, Alcohol Use Disorder, and Hypertension (although in theory it could be possible).  We can easily check this:
