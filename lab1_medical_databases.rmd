@@ -415,6 +415,10 @@ ggplot(results, aes(x=Feature, y=Importance,fill=Importance))+
 **17** Using the [caret package](https://topepo.github.io/caret/) fit and evaluate 1 other ML model on this data.
 
 ```{r}
+install.packages("caret", dependencies = c("Depends", "Suggests"))
+```
+
+```{r}
 xgb.grid <- expand.grid(eta=c(0.05),
                        max_depth=c(4),colsample_bytree=1,
                        subsample=1, nrounds=500, gamma=0, min_child_weight=5)
