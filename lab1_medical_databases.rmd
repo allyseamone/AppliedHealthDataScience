@@ -415,19 +415,29 @@ ggplot(results, aes(x=Feature, y=Importance,fill=Importance))+
 **17** Using the [caret package](https://topepo.github.io/caret/) fit and evaluate 1 other ML model on this data.
 
 ```{r}
-install.packages("caret", dependencies = c("Depends", "Suggests"))
+### REMOVE SUBSAMPLING FOR FINAL MODEL
+data.prep <- raw.data %>% select(-AppointmentID, -PatientID) #%>% sample_n(10000)
+
+set.seed(42)
+data.split <- initial_split(data.prep, prop = 0.7)
+train  <- training(data.split)
+test <- testing(data.split)
 ```
 
 ```{r}
-xgb.grid <- expand.grid(eta=c(0.05),
+fit.control <- trainControl(method="cv",number=3,
+                           classProbs = TRUE, summaryFunction = twoClassSummary)
+```
+
+```{r}
+crt.grid <- expand.grid(mtry = c(2,4,6), eta=c(0.05),
                        max_depth=c(4),colsample_bytree=1,
                        subsample=1, nrounds=500, gamma=0, min_child_weight=5)
+crt.model <- train(NoShow ~ .,data=train, method="rf",metric="ROC",
+                  tuneGrid=crt.grid, trControl=fit.control)
 
-xgb.model <- train(NoShow ~ .,data=train, method="xgbTree",metric="ROC",
-                  tuneGrid=xgb.grid, trControl=fit.control)
-
-xgb.pred <- predict(xgb.model, newdata=test)
-xgb.probs <- predict(xgb.model, newdata=test, type="prob")
+crt.pred <- predict(crt.model, newdata=test)
+crt.probs <- predict(crt.model, newdata=test, type="prob")
 ```
 
 ```{r}
