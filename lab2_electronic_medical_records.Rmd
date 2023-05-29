@@ -376,13 +376,17 @@ However, this may all just reflect we are using too few topics in our LDA to cap
 
 **10** Repeat this with a 6 topic LDA, do the top terms from the 3 topic LDA still turn up? How do the specialties get split into sub-topics?
 
+From the six topic LDA, most of the top terms from the five topic LDA still do turn up. Some of the top terms do not show up here.
+
+The specialties get split into sub-topics by
+
 ```{r}
 lemma.counts.2 <- lemmatized.data %>% dplyr::count(note_id, lemma)
-total.counts.2 <- lemma.counts %>% 
+total.counts.2 <- lemma.counts.2 %>% 
                       dplyr::group_by(note_id) %>% 
                       dplyr::summarise(total=sum(n))
 
-all.counts.2 <- dplyr::left_join(lemma.counts, total.counts)
+all.counts.2 <- dplyr::left_join(lemma.counts.2, total.counts.2)
 
 emr.dcm.2 <- all.counts %>% tidytext::cast_dtm(note_id, lemma, n)
 ```
@@ -394,13 +398,13 @@ emr.topics.2 <- tidytext::tidy(emr.lda.2, matrix='beta')
 
 ```{r}
 
-top.terms <- emr.topics.2 %>% dplyr::group_by(topic) %>% 
+top.terms.2 <- emr.topics.2 %>% dplyr::group_by(topic) %>% 
   dplyr::slice_max(beta, n=10) %>%
   dplyr::ungroup() %>%
   dplyr::arrange(topic, -beta)
 
 
-top.terms %>% 
+top.terms.2 %>% 
   dplyr::mutate(term=tidytext::reorder_within(term, beta, topic)) %>% 
   ggplot2::ggplot(ggplot2::aes(beta, term, fill=factor(topic))) + 
     ggplot2::geom_col(show.legend=FALSE) + 
