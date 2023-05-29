@@ -36,29 +36,47 @@ The data required is available via the [course website](https://github.com/magui
 **1** Use the data dictionary describe each of the variables/features in the CSV in your report.
 
 PatientID is unique identifier for each patient therefore they cannot be directly identified from their name etc. for ethical purposes.
+
 AppointmentID is a unique identifier to each appointment for confidentiality, as described above
+
 Gender indicates the patient's gender, which is Male or Female
+
 ScheduledDate is the date when the appointment was scheduled
+
 AppointmentDate is the date of the actual appointment when the individual comes in
+
 Age is the Patient's age (in years)
+
 Neighbourhood is the District of Vitória where the appointment takes place (Southeastern coast of Brazil)
+
 SocialWelfare is if the Patient is a recipient of Bolsa Família welfare payments (payments from the social welfare of the government of Brazil)
+
 Hypertension is if the Patient was previously diagnoised with hypertension before appointment (1 yes/ 0 no)
+
 Diabetes is if the Patient was previously diagnosed with diabetes before appointment (1 yes/ 0 no)
+
 AlcoholUseDisorder is if the Patient was previously diagnosed with alcohol use disorder before appointment (1 yes/ 0 no)
+
 Disability is if the Patient was previously diagnosed with a disability before the appointment (severity rated 0-4)
+
 SMSReceived is at least 1 reminder text sent before appointment (1 yes/ 0 no)
-NoShow if the Patient did not show up scheduled appointment (Yes/No)
+
+NoShow is if the Patient did not show up scheduled appointment (Yes/No)
 
 **2** Can you think of 3 hypotheses for why someone may be more likely to miss a medical appointment?
+
 1. Low socioeconomic status (may not have transportation or ability to get there)
-2. Older Age (may forget about appointment or may not be able to physically get there)
-3. Mental health and addiction issues (may not want to go there (embarassment/stigma) or may not have resourses/transportation to get there)
+
+2. Older Age (may forget about appointment or may not be able to physically get there without assistance)
+
+3. Mental health and addiction issues (may not want to go there (embarassment/stigma surrounding addictions) or may not have resourses/transportation to get there)
 
 **3** Can you provide 3 examples of important contextual information that is missing in this data dictionary and dataset that could impact your analyses e.g., what type of medical appointment does each `AppointmentID` refer to?  
-1. Distance from place of residence to appointment site
-2. Length of stay in hospital/Admissions to hospital
-3. Type of disability
+1. Distance from place of residence to appointment site (could be a major factor to predicting no shows, as the more time individuals have to spend to get to their appointment, maybe the less likely they are to attend it)
+
+2. Number of admissions to hospital (this would be helpful to know if patients were admitted to the hospital following an appointment and could be the reason for many appointments if they have a disease or chronic condition)
+
+3. Type of disability (this could be helpful for predicting no shows and could be a proxy to determine if individuals need assistance getting to their appointments)
 
 ## Data Parsing and Cleaning
 
@@ -78,7 +96,7 @@ We can see there are 2 patient's older than 100 which seems suspicious but we ca
 
 **5** Are there any individuals with impossible ages? If so we can drop this row using `filter` i.e., `data <- data %>% filter(CRITERIA)`
 
-While there are two people that are 115 years old, we cannot actually tell if this is an impossible age. One of the individuals does have hypertension, which can be mananged using medication, but it may not be biologically plausible for an individual to live to 115 years while having hypertension. It also says that the individual did recieve a text message reminder, in this day and age alot of individuals do have cell phones, an individual that is 115 years old may not have a cell phone. This age may be an imputation error or it could be correct, but these should be considered with caution as they are borderline biologically implausible. These individuals will be kept in the data set but when interpreting results, there should be considerations for these individuals.
+While there are two people that are 115 years old, we cannot actually tell if this is an impossible age. One of the individuals does have hypertension, which can be managed using medication, but it may not be biologically plausible for an individual to live to 115 years while having hypertension. It also says that the individual did receive a text message reminder, in this day and age a lot of individuals do have cell phones; an individual that is 115 years old may not have a cell phone. This age may be an imputation error or it could be correct, but these should be considered with caution as they are borderline biologically implausible. These individuals will be kept in the data set but when interpreting results, there should be considerations for these individuals. Since there are 110 527 observations, these 2 individuals should not skew the data or analyses.
 
 ## Exploratory Data Analysis
 First, we should get an idea if the data meets our expectations, there are newborns in the data (`Age==0`) and we wouldn't expect any of these to be diagnosed with Diabetes, Alcohol Use Disorder, and Hypertension (although in theory it could be possible).  We can easily check this:
@@ -94,7 +112,7 @@ count(raw.data, Neighbourhood, sort = TRUE)
 ```
 **6** What is the maximum number of appointments from the same patient?
 
-The maximum number of appointments from the same patient (822145925426128) is 88.They did not show up to alot of their appointments though. 
+The maximum number of appointments from the same patient (822145925426128) is 88.They did not show up to a lot of their appointments though. 
 
 ```{r}
 count(raw.data, PatientID, sort = TRUE)
@@ -163,7 +181,7 @@ In this case, we are particularly interested in relationships between `NoShow` a
 
 **7** Which parameters most strongly correlate with missing appointments (`NoShow`)?
 
-SMSRecieved and ScheduledDate are most strongly correlated with NoShow, even though these are not above 0.5 or below -0.5 they have the highest values on the column.
+SMSRecieved and ScheduledDate are most strongly correlated with NoShow, even though these are not above 0.5 or below -0.5 they have the highest values on the column. The strongly correlated is based on the legend on the heat map.
 
 **8** Are there any other variables which strongly correlate with one another?
 
@@ -175,9 +193,9 @@ Age and Hypertension are strongly correlated.
 
 **9** Do you see any issues with PatientID/AppointmentID being included in this plot? 
 
-Yes, there is an issue with PatientID/AppointmentID being included in this plot, as they are variables that are supposed to be random identifiers so they should not have any correlation.
+Yes, there is an issue with PatientID/AppointmentID being included in this plot; they are variables that are supposed to be random identifiers so they should not have any correlation.
 
-For example a singular patient (PatientID) could have more than 1 appointment, which would include more than 1 AppointmentID. Therefore AppointmentID could only ever have one PatientID associated to it, but a PatientID could have more than one AppointmentID.
+For example a singular patient (PatientID) could have more than 1 appointment, which would include more than 1 AppointmentID. Therefore AppointmentID could only ever have one PatientID associated to it, but a PatientID could have more than one AppointmentID associated with it.
 
 Let's look at some individual variables and their relationship with `NoShow`.
 
@@ -207,11 +225,7 @@ ggplot(raw.data) +
 **10** How could you be misled if you only plotted 1 of these 2 plots of attendance by age group?
 
 You could be misled if you only plotted 1 of these 2 plots of attendance by age group because 1 plot is showing counts and one plot is showing proportions. In plot 1, it looks as if individuals aged 0 to 30 have the most no shows, and no shows decrease with age, since there are very few individuals over 90. In plot 2, it looks as if individuals aged 10 to 30 have the most no shows and decreases with age until 60, then increases rapidly as there is a smaller number of older individuals, but there is a larger proportion of no shows here.
-
-The key takeaway from this is that  number of individuals > 90 are very few from plot 1 so probably are very small so unlikely to make much of an impact on the overall distributions. 
-However, other patterns do emerge such as 10-20 age group is nearly twice as likely to miss appointments as the 60-70 years old.
-
-Another interesting finding is the `NA` group, they are the result of trying to assign age of 0 to groups and represent missing data.
+There are very few individuals older than 90 years old from plot 1, therefore this does not really impact the overall distributions. There are twice as many missed appointments in the 10-20 age group compared to the 60-70 age group. The zero age group has some no shows since the observations with missing age will be in that category.
 
 ```{r}
 raw.data %>% filter(Age == 0) %>% count()
@@ -232,7 +246,9 @@ ggplot(raw.data) +
 
 **11** From this plot does it look like SMS reminders increase or decrease the chance of someone not attending an appointment? Why might the opposite actually be true (hint: think about biases)? 
 
-From the plot it does look like SMS reminders increase the chance of someone not attending an appointment. This could be the case because individuals who have same day appointments may not be receiving a text message reminder, and they do show up. This could also be biased because older individuals may be less likely to have cell phones, and therefore may not be able to recieve text messages. 
+From the plot it does look like SMS reminders increase the chance of someone not attending an appointment. This could be the case because individuals who have same day or walk-in appointments may not be receiving a text message reminder, and they do show up. This would make the SMS Received FALSE. This could also be biased because older individuals may be less likely to have cell phones, and therefore may not be able to receive text messages, which would therefore make the SMS Received variable FALSE. 
+
+Therefore the individuals that do not received a SMS reminder may be more likely to show up to their appointment since it may be on the same day or they just do not have a cell phone. This is biased according to the plot and thats why the opposite (individuals that do not received a SMS reminder may be more likely to show up to their appointment) may be true.
 
 **12** Create a similar plot which compares the the density of `NoShow` across the values of disability 
 
@@ -265,7 +281,7 @@ Most neighborhoods have similar proportions of no-show but some have much higher
 
 **13** Suggest a reason for differences in attendance rates across neighbourhoods.
 
-A possible reason for differences in attendance rates across neighbourhoods could be differences in socioeconomic status or distance from appointment site. 
+A possible reason for differences in attendance rates across neighborhoods could be differences in socioeconomic status or distance from appointment site. If individuals are from a certain low SES neighborhood then they may not have access to a car and this could be a barrier to overcome when getting to their appointment. Individuals that live in a certain neighborhood that is really far away from the appointment site may be less likely to get to their appointment due to the time it takes to get their (due to traffic, etc.). 
 
 Now let's explore the relationship between gender and NoShow.
 ```{r, fig.align="center"}
@@ -325,7 +341,7 @@ ggplot(raw.data) +
 
 **15** Have a look at the values in lag variable, does anything seem odd?
 
-In the graph, it does show that there are lag days that are less than zero. This means that the scheduled date was a later date than when the appointment date was. This could be an error when entering the dates and interpreting the days and months in reverse.
+In the graph, it does show that there are lag days that are less than zero and there is a huge number of lag days that are zero. Negative lag days means that the scheduled date was a later date than when the appointment date was. This could be an error when entering the dates and interpreting the days and months in reverse. When considering the lag days that are zero, this could be appointments that are scheduled (or individuals just show up) and occur on the same day; which could be walk in appointments. When interpreting models, it will be necessary to distinguish between walk in and scheduled appointments. Since these two types of appointments are included here, it may be difficult to develop a good prediction model.
 
 ## Predictive Modeling
 
@@ -353,7 +369,7 @@ fit.control <- trainControl(method="cv",number=3,
 
 **16** Based on the EDA, how well do you think this is going to work?
 
-Based on the exploratory data analysis, this 
+Based on the exploratory data analysis, there have been some issues identified. There are some important variables missing from the data set when predicting no shows such as: distance from site, a more direct identifier of income, and type of disability. The variables in the data set may do a decent job of predicting no shows, but there could be more options that could be better predictors of whether an individual will not show up to their appointment. Another issue is that there are a few outliers in the data set that are hard to distinguish if they are biologically plausible or not. Keeping these individuals in the data set may skew the results very slightly, but since there are 110 527 observations this should not be an issue, but should be considered. There is a bias that was associated with SMS reminders that could impact how well the prediction model will work. Prediction may also be difficult since walk-in and scheduled appointments are being consdiered here, based on the lag time variable. Therefore, based on the issues mentioned above, this prediction model may not predict no shows very well.
 
 Now we can train our XGBoost model
 ```{r}
@@ -421,18 +437,26 @@ test <- testing(data.split)
 ```
 
 ```{r}
-fit.control <- trainControl(method="repeatedcv", number=6,repeats=6,
-                           classProbs = TRUE, summaryFunction = twoClassSummary)
+fit.control <- trainControl(method="repeatedcv", number=6,repeats=6)
 ```
 
 ```{r}
 crt.tree <- train(NoShow ~., data=train, method="rpart", trControl=fit.control)
 ```
 
-
-
+```{r}
+crt.tree
+```
 
 **18** Based on everything, do you think we can trust analyses based on this dataset? Explain your reasoning.
+
+Based on previous exploratory data analysis and the prediction models developed above, I would say that these analyses should be considered with caution. Since there were biases with the SMS received variable, further variables that may be better predictors (mentioned in question 16), and other limitations explained in the lag time variable question (including walk-in and scheduled appointment). 
+
+The two prediction models performed decently with an accuracy value around 0.8, however the first prediction model had a very low sensitivity and a very high specificity. When creating a good prediction model, a balance between the two (sensitivity and specificity) is more important than having a very high one and a very low one. 
+
+With the issues and statistics described above, I would say that we cannot fully trust analyses based on this data set, but interpretations should consider and describe the limitations. Interpretations of the models should consider the different types of appointments included here, based on the lag time variable there were walk-in appointments and scheduled appointments in the dataset. Predicting no shows for walk-in appointments may be more difficult as there would only be time independent data used to predict this, and this would be different for scheduled appointments. 
+
+The main factors that make the data set trustworthy for analysis would be the large number of observations and number of variables included.
 
 ## Credits
 
