@@ -1,3 +1,16 @@
+---
+output:
+  pdf_document: default
+  html_document: default
+---
+**Lab 2**
+**Ally Seamone**
+
+---
+output:
+  pdf_document: default
+  html_document: default
+---
 ```{r setup}
 knitr::opts_chunk$set(echo = TRUE)
 library(readr)
@@ -34,10 +47,15 @@ There is no explanation or data dictionary with this dataset, which is a surpris
 **1** Using the output of dplyr's `glimpse` command (or rstudio's data viewer by clicking on `raw.data` in the Environment pane) provide a description of what you think each in this dataset contains.
 
 **NoteID:** an integer value used to number/describe each medical record in the data set 
+
 **Description:** an explanation of why individuals are visiting the hospital/  (character)
+
 **Medical Specialty:** specialized department of the hospital the patient will go to based on their medical condition (character)
+
 **Sample Name:** medical name of the condition the patient is experiencing (character)
+
 **Transcription:** written description of the entire medical record/doctors information taken down when with patient (character)
+
 **Keywords:** medical terms that could be important identifiers of the medical condition (character)
 
 Let's see how many different medical specialties are featured in these notes: 
