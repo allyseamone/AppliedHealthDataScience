@@ -5,6 +5,8 @@ output:
 ---
 **Lab 2**
 **Ally Seamone**
+**June 4**
+
 
 ---
 output:
